@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.SECRET_KEY || "271119";
 
-const validateUser = (req, res, next) => {
+exports.validateUser = (req, res, next) => {
   let token = req.headers["authorization"];
   if (!token)
     return res.status(401).json({ status: "error", response: "Unauthorized" });
@@ -15,5 +15,3 @@ const validateUser = (req, res, next) => {
     }
   });
 };
-
-module.exports = validateUser;

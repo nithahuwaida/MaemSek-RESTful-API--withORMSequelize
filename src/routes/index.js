@@ -8,6 +8,7 @@ const user = require('./user');
 // const category = require('./category');
 // const transaction= require('./transaction');
 const userController = require('../controllers/user');
+const { validateUser } = require('../middleware/validateToken');
 
 Router.get("/", (req, res) => {
   res.json({
@@ -17,7 +18,7 @@ Router.get("/", (req, res) => {
 .post('/register', userController.registerUser)
 .post('/login', userController.loginUser);
 
-Router.use('/users',user);
+Router.use('/users',validateUser,user);
 // Router.use('/products',product);
 // Router.use('/categories',category);
 // Router.use('/transactions',transaction);
