@@ -215,10 +215,10 @@ exports.loginUser = async (req,res) =>{
 
 exports.getUserAll = async (req,res) =>{
     try{
-        const dataUser = await userModel.findAll();
+        const dataUserAll = await userModel.findAll();
         res.json({
             status: "success",
-            response: dataUser
+            response: dataUserAll
         });
     } catch (error) {
       res.status(400).json({
@@ -256,38 +256,197 @@ exports.getUserById = async (req,res) => {
 exports.updateUser = async (req,res) =>{
     try{
         const id = req.params.id;
+        const fullname = req.body.fullname;
+        const username = req.body.username;
+        const email = req.body.email;
+
         const checkUser = await userModel.findOne({
             where : { id }
-        })
+        });
+        
         if(checkUser){
-            const updateUser = await userModel.update({
-                fullname: req.body.fullname,
-                username : req.body.username,
-                email : req.body.email,
-            },{
-                where : { id }
-            });
-            if(updateUser){
-                const newUpdateUser = await userModel.findOne({
-                    where : { id }
-                })
-                res.json({
-                    status: "success",
-                    message: 'Update successfully',
-                    response: newUpdateUser
+            if(username === "" || username === null || username === undefined){
+                if(email === "" || email === null || email === undefined){
+                    const updateUser = await userModel.update({
+                        fullname: fullname,
+                    },{
+                        where : { id }
+                    });
+                    if(updateUser){
+                        const newUpdateUser = await userModel.findOne({
+                            where : { id }
+                        })
+                        res.json({
+                            status: "success",
+                            message: 'Update successfully',
+                            response: newUpdateUser
+                        });
+                    }
+                }else{
+                    const checkEmail = await userModel.findOne({
+                        where : { email}
+                    });
+                    if(checkEmail){
+                        if(id == checkEmail.id){
+                            const updateUser = await userModel.update({
+                                fullname: fullname,
+                                email : email
+                            },{
+                                where : { id }
+                            });
+                            if(updateUser){
+                                const newUpdateUser = await userModel.findOne({
+                                    where : { id }
+                                })
+                                res.json({
+                                    status: "success",
+                                    message: 'Update successfully',
+                                    response: newUpdateUser
+                                });
+                            }
+                        }else{
+                            res.json({
+                                status : 'error',
+                                response : 'Email is exist'
+                            })
+                        }
+                    }else{
+                        const updateUser = await userModel.update({
+                            fullname: fullname,
+                            email : email
+                        },{
+                            where : { id }
+                        });
+                        if(updateUser){
+                            const newUpdateUser = await userModel.findOne({
+                                where : { id }
+                            })
+                            res.json({
+                                status: "success",
+                                message: 'Update successfully',
+                                response: newUpdateUser
+                            });
+                        }
+                    }
+                }
+            }else{
+                const checkUsername = await userModel.findOne({
+                    where : {username}
                 });
+                if(checkUsername){
+                    if(id == checkUsername.id){
+                        if(email === "" || email === null || email === undefined){
+                            const updateUser = await userModel.update({
+                                fullname: fullname,
+                                username: username
+                            },{
+                                where : { id }
+                            });
+                            if(updateUser){
+                                const newUpdateUser = await userModel.findOne({
+                                    where : { id }
+                                })
+                                res.json({
+                                    status: "success",
+                                    message: 'Update successfully',
+                                    response: newUpdateUser
+                                });
+                            }
+                        }else{
+                            const checkEmail = await userModel.findOne({
+                                where : { email}
+                            });
+                            if(id == checkEmail.id){
+                                const updateUser = await userModel.update({
+                                    fullname: fullname,
+                                    email : email,
+                                    username: username
+                                },{
+                                    where : { id }
+                                });
+                                if(updateUser){
+                                    const newUpdateUser = await userModel.findOne({
+                                        where : { id }
+                                    })
+                                    res.json({
+                                        status: "success",
+                                        message: 'Update successfully',
+                                        response: newUpdateUser
+                                    });
+                                }
+                            }else{
+                                res.json({
+                                    status : 'error',
+                                    response : 'Email is exist'
+                                })
+                            }
+                        }
+                    }else{
+                        res.json({
+                            status : 'error',
+                            response : 'Username is exist'
+                        })
+                    }
+                }else{
+                    if(email === "" || email === null || email === undefined){
+                        const updateUser = await userModel.update({
+                            fullname: fullname,
+                            username: username
+                        },{
+                            where : { id }
+                        });
+                        if(updateUser){
+                            const newUpdateUser = await userModel.findOne({
+                                where : { id }
+                            })
+                            res.json({
+                                status: "success",
+                                message: 'Update successfully',
+                                response: newUpdateUser
+                            });
+                        }
+                    }else{
+                        const checkEmail = await userModel.findOne({
+                            where : { email}
+                        });
+                        if(id == checkEmail.id){
+                            const updateUser = await userModel.update({
+                                fullname: fullname,
+                                email : email,
+                                username: username
+                            },{
+                                where : { id }
+                            });
+                            if(updateUser){
+                                const newUpdateUser = await userModel.findOne({
+                                    where : { id }
+                                })
+                                res.json({
+                                    status: "success",
+                                    message: 'Update successfully',
+                                    response: newUpdateUser
+                                });
+                            }
+                        }else{
+                            res.json({
+                                status : 'error',
+                                response : 'Email is exist'
+                            })
+                        }
+                    }
+                }
             }
         }else{
             res.json({
-                status: "error",
-                response : 'User not found' 
-            });
+                status: 'error',
+                response :'User not found'
+            })
         }
-    } catch (error) {
-      res.status(400).json({
-        status: "error",
-        response: error
-      });
+    }catch(error){
+        res.status(400).json({
+            status: 'error',
+            response: error
+        })
     }
 }
 
