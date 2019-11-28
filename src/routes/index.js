@@ -4,7 +4,7 @@ const express = require('express');
 const Router = express.Router();
 
 const user = require('./user');
-// const product = require('./product');
+const product = require('./product');
 const category = require('./category');
 // const transaction= require('./transaction');
 const userController = require('../controllers/user');
@@ -19,7 +19,7 @@ Router.get("/", (req, res) => {
 .post('/login', userController.loginUser);
 
 Router.use('/users',validateUser, user);
-// Router.use('/products',product);
+Router.use('/products',validateUser, product);
 Router.use('/categories',validateUser, category);
 // Router.use('/transactions',transaction);
 
