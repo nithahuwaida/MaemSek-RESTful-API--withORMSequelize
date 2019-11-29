@@ -86,7 +86,16 @@ exports.postProduct = async (req,res) => {
                 response : 'Name Product is exist'
             })
         }
-
+        
+        const checkCategory = await categoryModel.findOne({
+            where : { id: id_category }
+        })
+        if(!checkCategory){
+            return res.json({
+                status : 'error',
+                response : 'Category not found'
+            })
+        }
         if (id_category === "" || id_category === null || id_category === undefined) {
             return res.json({
               status: "error",
@@ -101,11 +110,25 @@ exports.postProduct = async (req,res) => {
             });
         }
 
+        if(parseInt(price_product) < 0){
+            return res.json({
+                status : 'error',
+                response : 'Price product cant below Rp. 0'
+            })
+        }
+
         if (quantity_product === "" || quantity_product === null || quantity_product === undefined) {
             return res.json({
               status: "error",
               response: "Quantity product cant be empty"
             });
+        }
+
+        if(parseInt(quantity_product) < 0){
+            return res.json({
+                status : 'error',
+                response : 'Quantity product cant below 0'
+            })
         }
 
         const newProduct = await productModel.create({
@@ -161,6 +184,20 @@ exports.updateProduct = async (req,res) => {
             where : { id }
         })
 
+        if(parseInt(price_product) < 0){
+            return res.json({
+                status : 'error',
+                response : 'Price product cant below Rp. 0'
+            })
+        }
+
+        if(parseInt(quantity_product) < 0){
+            return res.json({
+                status : 'error',
+                response : 'Quantity product cant below 0'
+            })
+        }
+
         if(checkProduct){
             if(name_product==='' || name_product=== null || name_product===undefined){
                 const updateProduct = await productModel.update({
@@ -195,6 +232,7 @@ exports.updateProduct = async (req,res) => {
                 if(checkNameProduct){
                     if(id == checkNameProduct.id){
                         const updateProduct = await productModel.update({
+                            name_product : name_product,
                             desc_product : desc_product,
                             image_product : image_product,
                             id_category : id_category,
@@ -227,6 +265,7 @@ exports.updateProduct = async (req,res) => {
                     }
                 }else{
                     const updateProduct = await productModel.update({
+                        name_product : name_product,
                         desc_product : desc_product,
                         image_product : image_product,
                         id_category : id_category,
