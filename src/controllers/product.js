@@ -2,12 +2,11 @@
 
 const { productModel } = require('../models/product');
 const { categoryModel } = require('../models/category');
+productModel.belongsTo(categoryModel, { foreignKey : 'id_category'});
+categoryModel.hasMany(productModel, { foreignKey : 'id' });
 
 exports.getProductAll = async (req, res) => {
     try{
-        productModel.belongsTo(categoryModel, { foreignKey : 'id_category'});
-        categoryModel.hasMany(productModel, { foreignKey : 'id' });
-
         const getProductAllData = await productModel.findAll({
             include:[
                 {
@@ -33,8 +32,6 @@ exports.getProductAll = async (req, res) => {
 exports.getProductById = async (req,res) => {
     try{
         const id = req.params.id;
-        productModel.belongsTo(categoryModel, { foreignKey : 'id_category'});
-        categoryModel.hasMany(productModel, { foreignKey : 'id' });
 
         const ProductDataById = await productModel.findOne({
             where : { id },
@@ -120,9 +117,6 @@ exports.postProduct = async (req,res) => {
             quantity_product : quantity_product
         })
         if(newProduct){
-            productModel.belongsTo(categoryModel, { foreignKey : 'id_category'});
-            categoryModel.hasMany(productModel, { foreignKey : 'id' });
-
             const newProductData = await productModel.findOne({
                 where : { name_product },
                 include:[
@@ -179,8 +173,6 @@ exports.updateProduct = async (req,res) => {
                     where : { id }
                 })
                 if(updateProduct){
-                    productModel.belongsTo(categoryModel, { foreignKey : 'id_category'});
-                    categoryModel.hasMany(productModel, { foreignKey : 'id' });
                     const updateProductData = await productModel.findOne({
                         where : { id },
                         include:[
@@ -212,8 +204,6 @@ exports.updateProduct = async (req,res) => {
                             where : { id }
                         })
                         if(updateProduct){
-                            productModel.belongsTo(categoryModel, { foreignKey : 'id_category'});
-                            categoryModel.hasMany(productModel, { foreignKey : 'id' });
                             const updateProductData = await productModel.findOne({
                                 where : { id },
                                 include:[
@@ -246,8 +236,6 @@ exports.updateProduct = async (req,res) => {
                         where : { id }
                     })
                     if(updateProduct){
-                        productModel.belongsTo(categoryModel, { foreignKey : 'id_category'});
-                        categoryModel.hasMany(productModel, { foreignKey : 'id' });
                         const updateProductData = await productModel.findOne({
                             where : { id },
                             include:[
