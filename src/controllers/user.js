@@ -356,7 +356,32 @@ exports.updateUser = async (req,res) =>{
                             const checkEmail = await userModel.findOne({
                                 where : { email}
                             });
-                            if(id == checkEmail.id){
+                            if(checkEmail){
+                                if(id == checkEmail.id){
+                                    const updateUser = await userModel.update({
+                                        fullname: fullname,
+                                        email : email,
+                                        username: username
+                                    },{
+                                        where : { id }
+                                    });
+                                    if(updateUser){
+                                        const newUpdateUser = await userModel.findOne({
+                                            where : { id }
+                                        })
+                                        res.json({
+                                            status: "success",
+                                            message: 'Update successfully',
+                                            response: newUpdateUser
+                                        });
+                                    }
+                                }else{
+                                    res.json({
+                                        status : 'error',
+                                        response : 'Email is exist'
+                                    })
+                                }
+                            }else{
                                 const updateUser = await userModel.update({
                                     fullname: fullname,
                                     email : email,
@@ -374,11 +399,6 @@ exports.updateUser = async (req,res) =>{
                                         response: newUpdateUser
                                     });
                                 }
-                            }else{
-                                res.json({
-                                    status : 'error',
-                                    response : 'Email is exist'
-                                })
                             }
                         }
                     }else{
@@ -409,7 +429,32 @@ exports.updateUser = async (req,res) =>{
                         const checkEmail = await userModel.findOne({
                             where : { email}
                         });
-                        if(id == checkEmail.id){
+                        if(checkEmail){
+                            if(id == checkEmail.id){
+                                const updateUser = await userModel.update({
+                                    fullname: fullname,
+                                    email : email,
+                                    username: username
+                                },{
+                                    where : { id }
+                                });
+                                if(updateUser){
+                                    const newUpdateUser = await userModel.findOne({
+                                        where : { id }
+                                    })
+                                    res.json({
+                                        status: "success",
+                                        message: 'Update successfully',
+                                        response: newUpdateUser
+                                    });
+                                }
+                            }else{
+                                res.json({
+                                    status : 'error',
+                                    response : 'Email is exist'
+                                })
+                            }
+                        }else{
                             const updateUser = await userModel.update({
                                 fullname: fullname,
                                 email : email,
@@ -427,11 +472,6 @@ exports.updateUser = async (req,res) =>{
                                     response: newUpdateUser
                                 });
                             }
-                        }else{
-                            res.json({
-                                status : 'error',
-                                response : 'Email is exist'
-                            })
                         }
                     }
                 }
