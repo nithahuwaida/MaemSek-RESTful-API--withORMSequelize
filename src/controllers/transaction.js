@@ -106,7 +106,7 @@ exports.getTransactionById = async (req,res) => {
         })
         if(getTransactionById){
             res.json({
-                status : 'succes',
+                status : 'success',
                 response : getTransactionById
             })
         }else{
