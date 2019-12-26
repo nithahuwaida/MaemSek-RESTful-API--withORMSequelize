@@ -170,15 +170,15 @@ exports.postTransaction = async (req,res) => {
         let updateDetailOrder = detail_order.map(item =>({...item, id_transaction :id_trans}));
 
 
-        console.log('id_transaction',id_transaction)
-        console.log('id_user',user_id)
-        console.log('total_price',parseInt(total_price))
-        console.log('detail_order',detail_order)
-        console.log('updateDetailOrder',updateDetailOrder)
-        const total = total_price;
-        const id_user = user_id;
+        // console.log('id_transaction',id_transaction)
+        // console.log('id_user',user_id)
+        // console.log('total_price',parseInt(total_price))
+        // console.log('detail_order',detail_order)
+        // console.log('updateDetailOrder',updateDetailOrder)
+        // const total = total_price;
+        // const id_user = user_id;
 
-        if(id_user==='' || id_user===null || id_user===undefined){
+        if(user_id ==='' || user_id ===null || user_id ===undefined){
             return res.json({
                 status: 'error',
                 response : 'User cant be empty'
@@ -186,12 +186,19 @@ exports.postTransaction = async (req,res) => {
         }
 
         const checkUser = await userModel.findOne({
-            where : {id : id_user}
+            where : {id : user_id }
         })
         if(!checkUser){
             return res.json({
                 status : 'error',
                 response : 'User not found'
+            })
+        }
+
+        if(total_price ==='' || total_price ===null || total_price ===undefined){
+            return res.json({
+                status: 'error',
+                response : 'Total price cant be empty'
             })
         }
 
@@ -249,13 +256,13 @@ exports.postTransaction = async (req,res) => {
 
         const newTransaction = await transactionModel.create({
             id_transaction : id_trans,
-            total_transaction : total,
-            id_user : id_user,
+            total_transaction : total_price,
+            id_user : user_id,
         })
         if(newTransaction){
             const newProdTrans = await protransModel.bulkCreate(updateDetailOrder, { validate: true })
             if(newProdTrans){
-                const reduceQty = updateDetailOrder.map( async (item)=>{
+                const reduceQty = await updateDetailOrder.map( async (item)=>{
                     const order_qty = item.order_qty;
                     const id_product = item.product_id;
 
@@ -299,6 +306,11 @@ exports.postTransaction = async (req,res) => {
                                 status : 'success',
                                 message : 'Transaction Successfully',
                                 response : {newProdTransData, updateProduct}
+                            })
+                        }else{
+                            res.json({
+                                status: 'error',
+                                response : 'Transaction failed'
                             })
                         }
                     }
