@@ -7,6 +7,7 @@ const user = require('./user');
 const product = require('./product');
 const category = require('./category');
 const transaction= require('./transaction');
+const information= require('./information');
 const userController = require('../controllers/user');
 const { validateUser } = require('../middleware/validateToken');
 
@@ -22,6 +23,7 @@ Router.use('/users',validateUser, user);
 Router.use('/products',validateUser, product);
 Router.use('/categories',validateUser, category);
 Router.use('/transactions',validateUser,transaction);
+Router.use('/informations',validateUser,information);
 
 
 module.exports = Router;
