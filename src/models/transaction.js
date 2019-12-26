@@ -10,6 +10,9 @@ exports.transactionModel = Sequelize.define(
             type: DataTypes.INTEGER,
             primaryKey: true
         },
+        id_transaction:{
+            type: DataTypes.INTEGER,
+        },
         total_transaction:{
             type: DataTypes.INTEGER
         },
